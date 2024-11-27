@@ -1,0 +1,87 @@
+﻿Documentazione relativa al tool di conversione: 
+
+Linguaggio: C#
+Framework: Metro (UI)
+Versione Base: 1.0.0.0 - A  (A = alpha, B = beta, R = release)
+
+[-] LINEE GUIDA:
+- Non cambiare mai i file di base. Ereditate ed estendete.
+- La classe DBManager (statica) è utilizzata per la gestione delle connessioni SQL e per qualsiasi interazione con i DB.
+- La classe Helper (statica) è utilizzata per qualsiasi funzione generica da riutilizzare in più situazioni
+- Se dovete implementare una funzione specifica per una conversione, implementatela nella classe del tracciato che avete creato per quella specifica conversione
+- NON modificate ne cambiate le funzioni già create. Ricordatevi che le funzioni in C# supportano l'overload
+- In ogni tracciato è fortemente consigliato aggiungere commenti che indichino il funzionamento e la gestione del tracciato attuale (alcuni comuni utilizzano delle personalizzazioni o fanno richieste, è fortemente consiglaito annotare quest'ultime)
+- Per ogni comune creare una nuova cartella e creare l'albero delle cartelle come segue:
+
+
+| ========================================================= |
+
+[-] Esempio:
+
+	Comuni->
+		  Connettore->
+		            Gestionale->
+					          Comune->
+							        Contesto->
+									        Tracciati
+
+	Comuni->
+	      Oracle->
+		        Ascot->
+				     Rieti->
+					      Protocollo->
+						            Tgb05.cs ...
+
+• NB: Non è presente la macro area (esempio: affari generali )
+
+| ========================================================= |
+
+
+[-] FOLDER TREE:
+
+
+src (folder):
+	Cartella contenente codice sorgente. Qui vengono inserite eventuali classi che si occupano di gestione generale e utilities.
+	- DBManager: Classe che si occupa di gestire i collegamenti ai database. Supporta: Oracle, Postgres, Mysql (eventuali connettori possono essere aggiunti)
+	- Helper: Classe generica che si occupa della gestione delle conversioni. Inserire qui eventuali funzioni "esterne".
+
+
+Protocollo (folder):
+	Cartella che si occupa della dichiarazione delle classi che vanno ereditate (per ogni tracciato una classe). Questa cartella è generica, ogni file al suo interno
+	va ereditato all'interno della cartella del comune in esame. La classe ereditata va poi modificata all'occorenza 
+	NON MODIFICARE I TRACCIATI GENERICI PER ALCUN MOTIVO (al netto di modifiche da parte di PA digitale).
+
+
+FRM (folder):
+	Cartella che si occupa di contenere eventuali form. 
+	- Login: FRM che si occupa del login (accesso al database di conversione), e della scelta del connettore SQL.
+	- Main: Form principale che appare dopo il login. Contiene diverse tab, ognuna per il contesto di conversione (atti, protocollo, albo ...)
+	- ProfiliSQL: Gestore di credenziali. Storicizza le configurazioni per un accesso più comodo e veloce.
+
+
+Comuni (folder):
+	Cartella che si occupa di storicizzare i diversi comuni. Segue un "folder tree" particolare. Se non si conosce il gestionale, creare una cartella "Generico".
+
+
+Tracciati (folder):
+	Cartella che si occupa di storicizzare le cartelle dei diversi contesti (ad esempio: Albo, Protocollo, Atti). Per ogni tracciato viene creata una classe dentro la cartella del contesto in esame. 
+	I diversi comuni devono ereditare tali tracciati nella cartella di riferimento (sotto alla cartella "Comuni"). 
+	Ad esempio se devo fare il protocollo di Rieti:
+	Andrò a creare la Tbg05.cs (che eredita la classe pTbg05 da "Tracciati\Protocollo\Tbg05.cs") dentro a "Comuni\Oracle\Ascot\Rieti\Protocollo1\Tbg05.cs".
+
+| ========================================================= |
+
+Ultimo aggiornamento di questa nota: 07/12/2023
+
+
+[TODO]:
+
+- Il tool è funzionante solo per affari generali (alpha)
+- Wizard per la creazione automatizzata (già pronta la UI)
+- Bisogna finire la connessione TNS di Oracle mentre la connection string è stata implementata
+- Gestione docfisi diretta con elaborazione file (da PY a C#)
+
+
+[Aggiornamenti]:
+- Sistemato il connettore Oracle con connection string.
+- Fix minori
